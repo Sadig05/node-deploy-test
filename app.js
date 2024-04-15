@@ -125,7 +125,6 @@ const app = express();
 app.use(cors());
 
 app.use(express.json());
-
 app.get("/places", (req, res) => {
   let filteredPlaces = places;
 
@@ -139,6 +138,18 @@ app.get("/places", (req, res) => {
   if (req.query.type) {
     const type = req.query.type.toLowerCase();
     filteredPlaces = filteredPlaces.filter(place => place.type.toLowerCase() === type);
+  }
+
+  // Sorting
+  if (req.query._sort && req.query._order) {
+    const sortBy = req.query._sort;
+    const sortOrder = req.query._order === 'asc' ? 1 : -1;
+
+    filteredPlaces.sort((a, b) => {
+      if (a[sortBy] < b[sortBy]) return -1 * sortOrder;
+      if (a[sortBy] > b[sortBy]) return 1 * sortOrder;
+      return 0;
+    });
   }
 
   return res.json(filteredPlaces);
