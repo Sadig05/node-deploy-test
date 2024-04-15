@@ -121,13 +121,26 @@ const places = [
         type: "Villa"
       }
 ];
-
 const app = express();
 
 app.use(express.json());
 
 app.get("/places", (req, res) => {
-  return res.json(places);
+  let filteredPlaces = places;
+
+  // Filter by title
+  if (req.query.title) {
+    const title = req.query.title.toLowerCase();
+    filteredPlaces = places.filter(place => place.title.toLowerCase().includes(title));
+  }
+
+  // Filter by type
+  if (req.query.type) {
+    const type = req.query.type.toLowerCase();
+    filteredPlaces = filteredPlaces.filter(place => place.type.toLowerCase() === type);
+  }
+
+  return res.json(filteredPlaces);
 });
 
 app.get("/places/:id", (req, res) => {
