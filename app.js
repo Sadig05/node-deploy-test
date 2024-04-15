@@ -1,5 +1,5 @@
 import express from "express";
-
+import cors from "cors";
 const places = [
 
       {
@@ -122,6 +122,7 @@ const places = [
       }
 ];
 const app = express();
+app.use(cors());
 
 app.use(express.json());
 
